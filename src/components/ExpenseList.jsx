@@ -1,6 +1,6 @@
 import ExpenseItem from './ExpenseItem';
 
-function ExpenseList({ expenses, onDeleteExpense, filter, onFilterChange }) {
+function ExpenseList({ expenses, onDeleteExpense, filter, onFilterChange, currency }) {
     return (
         <div className="expense-list">
             <div className="list-header">
@@ -44,6 +44,7 @@ function ExpenseList({ expenses, onDeleteExpense, filter, onFilterChange }) {
                             key={expense.id}
                             expense={expense}
                             onDelete={onDeleteExpense}
+                            currency={currency}
                         />
                     ))}
                 </div>
