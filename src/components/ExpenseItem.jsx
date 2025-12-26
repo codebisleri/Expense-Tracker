@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-function ExpenseItem({ expense, onDelete }) {
+function ExpenseItem({ expense, onDelete, currency }) {
     // useMemo to format the date (optimization)
     const formattedDate = useMemo(() => {
         const date = new Date(expense.date);
@@ -13,11 +13,12 @@ function ExpenseItem({ expense, onDelete }) {
 
     // useMemo to format the amount
     const formattedAmount = useMemo(() => {
-        return new Intl.NumberFormat('en-US', {
+        const locale = currency === 'INR' ? 'en-IN' : 'en-US';
+        return new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: 'USD'
+            currency: currency
         }).format(expense.amount);
-    }, [expense.amount]);
+    }, [expense.amount, currency]);
 
     const handleDelete = () => {
         if (window.confirm(`Are you sure you want to delete "${expense.description}"?`)) {
