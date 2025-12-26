@@ -8,6 +8,21 @@ function App() {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, income, expense
+  const [currency, setCurrency] = useState(() => {
+    return localStorage.getItem('currency') || 'INR';
+  });
+
+  const currencies = [
+    { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
+    { code: 'USD', symbol: '$', name: 'US Dollar' },
+    { code: 'EUR', symbol: '€', name: 'Euro' },
+    { code: 'GBP', symbol: '£', name: 'British Pound' },
+    { code: 'JPY', symbol: '¥', name: 'Japanese Yen' }
+  ];
+
+  useEffect(() => {
+    localStorage.setItem('currency', currency);
+  }, [currency]);
 
   // useEffect to fetch data from mock API on component mount
   useEffect(() => {
@@ -22,7 +37,7 @@ function App() {
           {
             id: 1,
             description: 'Salary',
-            amount: 5000,
+            amount: 50000,
             category: 'Income',
             type: 'income',
             date: new Date().toISOString().split('T')[0]
@@ -30,7 +45,7 @@ function App() {
           {
             id: 2,
             description: 'Grocery Shopping',
-            amount: 150,
+            amount: 1500,
             category: 'Food',
             type: 'expense',
             date: new Date(Date.now() - 86400000).toISOString().split('T')[0]
@@ -38,7 +53,7 @@ function App() {
           {
             id: 3,
             description: 'Freelance Project',
-            amount: 800,
+            amount: 8000,
             category: 'Income',
             type: 'income',
             date: new Date(Date.now() - 172800000).toISOString().split('T')[0]
@@ -46,7 +61,7 @@ function App() {
           {
             id: 4,
             description: 'Electric Bill',
-            amount: 120,
+            amount: 1200,
             category: 'Utilities',
             type: 'expense',
             date: new Date(Date.now() - 259200000).toISOString().split('T')[0]
@@ -108,11 +123,24 @@ function App() {
     <div className="app">
       <div className="container">
         <header className="app-header">
+          <div className="currency-selector-container">
+            <select 
+              value={currency} 
+              onChange={(e) => setCurrency(e.target.value)}
+              className="currency-select"
+            >
+              {currencies.map(c => (
+                <option key={c.code} value={c.code}>
+                  {c.symbol} {c.code}
+                </option>
+              ))}
+            </select>
+          </div>
           <h1 className="app-title">💰 Expense Tracker</h1>
           <p className="app-subtitle">Track your income and expenses with ease</p>
         </header>
 
-        <StatsCards stats={stats} />
+        <StatsCards stats={stats} currency={currency} />
         
         <ExpenseForm onAddExpense={addExpense} />
         
@@ -127,6 +155,7 @@ function App() {
             onDeleteExpense={deleteExpense}
             filter={filter}
             onFilterChange={setFilter}
+            currency={currency}
           />
         )}
       </div>
