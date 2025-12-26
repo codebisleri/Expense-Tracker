@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
 
-function StatsCards({ stats }) {
+function StatsCards({ stats, currency }) {
     // useMemo to format currency values
     const formattedStats = useMemo(() => {
-        const formatter = new Intl.NumberFormat('en-US', {
+        const locale = currency === 'INR' ? 'en-IN' : 'en-US';
+        const formatter = new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: 'USD',
+            currency: currency,
             minimumFractionDigits: 2
         });
 
@@ -14,7 +15,7 @@ function StatsCards({ stats }) {
             totalExpense: formatter.format(stats.totalExpense),
             balance: formatter.format(stats.balance)
         };
-    }, [stats]);
+    }, [stats, currency]);
 
     return (
         <div className="stats-grid">
